@@ -11,21 +11,19 @@ const addRoute = (method: HttpMethod, path: string, handler: Handler): void => {
   routes.get(method)?.set(path, handler);
 };
 
-// Wrapper functions for each HTTP method
-export const rGet = (path: string, handler: Handler): void =>
-  addRoute("GET", path, handler);
-
-export const rPost = (path: string, handler: Handler): void =>
-  addRoute("POST", path, handler);
-
-export const rPut = (path: string, handler: Handler): void =>
-  addRoute("PUT", path, handler);
-
-export const rPatch = (path: string, handler: Handler): void =>
-  addRoute("PATCH", path, handler);
-
-export const rDelete = (path: string, handler: Handler): void =>
-  addRoute("DELETE", path, handler);
+/**
+ * A wrapper for HTTP methods to register routes.
+ */
+export const route = {
+  get: (path: string, handler: Handler): void => addRoute("GET", path, handler),
+  post: (path: string, handler: Handler): void =>
+    addRoute("POST", path, handler),
+  put: (path: string, handler: Handler): void => addRoute("PUT", path, handler),
+  patch: (path: string, handler: Handler): void =>
+    addRoute("PATCH", path, handler),
+  delete: (path: string, handler: Handler): void =>
+    addRoute("DELETE", path, handler),
+};
 
 export const listen = (port: number, callback?: () => void): void => {
   serve({
@@ -36,6 +34,7 @@ export const listen = (port: number, callback?: () => void): void => {
       const path = url.pathname;
 
       const methodRoutes = routes.get(method);
+      console.log({ methodRoutes });
       if (methodRoutes && methodRoutes.has(path)) {
         const handler = methodRoutes.get(path);
         if (handler) {
