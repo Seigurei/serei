@@ -5,7 +5,20 @@ export type Handler = (
   res: {
     send: (body: string | object) => Response;
     status: (code: number) => Response;
-  }
-) => Response;
+  },
+) => Response | Promise<Response>;
 
-export type Routes = Map<HttpMethod, Map<string, Handler>>;
+export type Middleware = (
+  req: Request,
+  res: {
+    send: (body: string | object) => Response;
+    status: (code: number) => Response;
+  },
+) => boolean | Promise<boolean>;
+
+export type RouteHandler = {
+  handler: Handler;
+  middlewares: Middleware[];
+};
+
+export type Routes = Map<HttpMethod, Map<string, RouteHandler>>;
